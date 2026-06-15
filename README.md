@@ -8,12 +8,14 @@ A aplicação calcula o cashback de uma compra com base nas regras de negócio i
 
 * Python
 * Flask
-* MySQL
+* PostgreSQL
+* Neon
 * HTML
 * CSS
 * JavaScript
-* phpMyAdmin
-* XAMPP
+* GitHub
+* Render
+* GitHub Pages
 
 ## Regras de negócio
 
@@ -38,13 +40,14 @@ Cliente VIP compra um produto de R$ 600,00 com cupom de 20% de desconto.
 
 ## Funcionalidades
 
-- Cálculo de cashback
-- Validação dos dados enviados pelo usuário
-- API em Python com Flask
-- Registro das consultas em banco MySQL
-- Histórico de consultas separado por IP
-- Exclusão de itens individuais do histórico
-- Frontend estático em HTML, CSS e JavaScript
+* Cálculo de cashback
+* Validação dos dados enviados pelo usuário
+* API em Python com Flask
+* Registro das consultas em banco PostgreSQL
+* Histórico de consultas separado por IP
+* Exclusão de itens individuais do histórico
+* Frontend estático em HTML, CSS e JavaScript
+* Configuração por variável de ambiente usando `DATABASE_URL`
 
 ## Estrutura do projeto
 
@@ -70,8 +73,10 @@ cashback-nology/
 │   └── 01_create_database.sql
 │
 ├── docs/
+│   └── respostas_desafio_nology.docx
 │
 ├── .gitignore
+├── Procfile
 └── README.md
 ```
 
@@ -86,26 +91,39 @@ cd cashback-nology
 
 ### 2. Criar o banco de dados
 
-Abra o phpMyAdmin e execute o script localizado em:
+O projeto utiliza PostgreSQL. Para executar localmente, é possível usar um banco local pelo pgAdmin ou uma instância online no Neon.
+
+Crie um banco chamado:
+
+```text
+db_cashback_nology
+```
+
+Depois execute o script localizado em:
 
 ```text
 database/01_create_database.sql
 ```
 
-Esse script cria o banco `db_cashback_nology` e a tabela `tbl_cashback_queries`.
+Esse script cria a tabela `tbl_cashback_queries`, responsável por armazenar o histórico de consultas.
 
 ### 3. Configurar variáveis de ambiente
 
 Dentro da pasta `backend`, crie um arquivo chamado `.env` com base no arquivo `.env.example`.
 
-Exemplo:
+Exemplo usando PostgreSQL local:
 
 ```env
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=
-DB_NAME=db_cashback_nology
+DATABASE_URL=postgresql://postgres:sua_senha@localhost:5432/db_cashback_nology
 ```
+
+Exemplo usando Neon:
+
+```env
+DATABASE_URL=postgresql://usuario:senha@host-do-neon/neondb?sslmode=require
+```
+
+O arquivo `.env` não deve ser enviado para o GitHub.
 
 ### 4. Instalar dependências do backend
 
@@ -151,18 +169,19 @@ Também é possível abrir usando a extensão Live Server do VS Code.
 GET /health
 ```
 
+Exemplo de resposta:
+
+```json
+{
+  "message": "API em execução"
+}
+```
+
 ### Calcular cashback
 
 ```http
 POST /calculate
 ```
-
-### Deletar item do histórico
-
-```http
-DELETE /history/:id
-```
-
 
 Exemplo de corpo da requisição:
 
@@ -193,6 +212,82 @@ GET /history
 
 Essa rota retorna apenas as consultas feitas pelo IP atual.
 
+Exemplo de resposta:
+
+```json
+{
+  "user_ip": "127.0.0.1",
+  "history": [
+    {
+      "id": 1,
+      "customer_type": "vip",
+      "purchase_value": 600.0,
+      "discount_percentage": 20.0,
+      "cashback": 26.4,
+      "created_at": "2026-06-15 18:50:40"
+    }
+  ]
+}
+```
+
+### Deletar item do histórico
+
+```http
+DELETE /history/:id
+```
+
+Essa rota remove um item específico do histórico, desde que ele pertença ao mesmo IP do usuário que está fazendo a requisição.
+
+Exemplo:
+
+```http
+DELETE /history/1
+```
+
+Exemplo de resposta:
+
+```json
+{
+  "message": "Registro deletado com sucesso."
+}
+```
+
+## Banco de dados
+
+Tabela utilizada no projeto:
+
+```sql
+CREATE TABLE IF NOT EXISTS tbl_cashback_queries (
+    id SERIAL PRIMARY KEY,
+    user_ip VARCHAR(45) NOT NULL,
+    customer_type VARCHAR(20) NOT NULL,
+    purchase_value NUMERIC(10,2) NOT NULL,
+    discount_percentage NUMERIC(5,2) NOT NULL,
+    cashback NUMERIC(10,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+## Deploy
+
+A proposta de deploy do projeto é:
+
+* Frontend estático hospedado no GitHub Pages
+* Backend Flask hospedado no Render
+* Banco PostgreSQL hospedado no Neon
+
+Para produção, o frontend deve apontar para a URL pública da API hospedada no Render.
+
+No arquivo `frontend/script.js`, a variável abaixo deve ser atualizada após o deploy do backend:
+
+```javascript
+const API_URL = "URL_DA_API_NO_RENDER";
+```
+
 ## Observações
 
-O projeto foi desenvolvido com foco em clareza, simplicidade e aderência às regras de negócio do desafio. As funções e variáveis foram mantidas em inglês por padrão de desenvolvimento, enquanto os comentários, mensagens para o usuário e documentação foram escritos em português.
+O projeto foi desenvolvido com foco em clareza, simplicidade e aderência às regras de negócio do desafio.
+
+As funções e variáveis foram mantidas em inglês por padrão de desenvolvimento, enquanto os comentários, mensagens para o usuário e documentação foram escritos em português, considerando o contexto da vaga e do avaliador.
+
+O arquivo `.env` não deve ser enviado para o repositório, pois pode conter credenciais de acesso ao banco de dados.
