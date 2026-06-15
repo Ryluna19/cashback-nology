@@ -74,10 +74,35 @@ async function loadHistory() {
             <p><strong>Desconto:</strong> ${item.discount_percentage}%</p>
             <p><strong>Cashback:</strong> ${formatCurrency(item.cashback)}</p>
             <p><strong>Data:</strong> ${item.created_at}</p>
-        `;
+
+            <button class="delete-button" onclick="deleteHistoryItem(${item.id})">
+                Deletar
+            </button>
+          `;
 
         historyList.appendChild(historyItem);
     });
+}
+
+async function deleteHistoryItem(id) {
+    const confirmDelete = confirm("Deseja deletar este registro do histórico?");
+
+    if (!confirmDelete) {
+        return;
+    }
+
+    const response = await fetch(`${API_URL}/history/${id}`, {
+        method: "DELETE"
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        alert(data.error);
+        return;
+    }
+
+    loadHistory();
 }
 
 form.addEventListener("submit", calculateCashback);
