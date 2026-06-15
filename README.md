@@ -38,12 +38,13 @@ Cliente VIP compra um produto de R$ 600,00 com cupom de 20% de desconto.
 
 ## Funcionalidades
 
-* Cálculo de cashback
-* Validação dos dados enviados pelo usuário
-* API em Python com Flask
-* Registro das consultas em banco MySQL
-* Histórico de consultas separado por IP
-* Frontend estático em HTML, CSS e JavaScript
+- Cálculo de cashback
+- Validação dos dados enviados pelo usuário
+- API em Python com Flask
+- Registro das consultas em banco MySQL
+- Histórico de consultas separado por IP
+- Exclusão de itens individuais do histórico
+- Frontend estático em HTML, CSS e JavaScript
 
 ## Estrutura do projeto
 
@@ -155,6 +156,13 @@ GET /health
 ```http
 POST /calculate
 ```
+
+### Deletar item do histórico
+
+```http
+DELETE /history/:id
+```
+
 
 Exemplo de corpo da requisição:
 
