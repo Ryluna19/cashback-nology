@@ -10,6 +10,17 @@ function formatCurrency(value) {
         currency: "BRL"
     });
 }
+function formatDate(dateValue) {
+    const date = new Date(dateValue);
+
+    return date.toLocaleString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+}
 function formatCustomerType(customerType) {
     if (customerType === "vip") {
         return "VIP";
@@ -73,7 +84,7 @@ async function loadHistory() {
             <p><strong>Valor da compra:</strong> ${formatCurrency(item.purchase_value)}</p>
             <p><strong>Desconto:</strong> ${item.discount_percentage}%</p>
             <p><strong>Cashback:</strong> ${formatCurrency(item.cashback)}</p>
-            <p><strong>Data:</strong> ${item.created_at}</p>
+            <p><strong>Data:</strong> ${formatDate(item.created_at)}</p>
 
             <button class="delete-button" onclick="deleteHistoryItem(${item.id})">
                 Deletar

@@ -1,8 +1,10 @@
 import os
+from datetime import timezone
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from cashback import calculate_cashback
 from database import save_query, get_history_by_ip, delete_query_by_id_and_ip
+
 
 app = Flask(__name__)
 CORS(app)
@@ -17,6 +19,12 @@ def get_user_ip():
 
     return request.remote_addr
 
+def format_created_at(created_at):
+    # Trata o horário vindo do banco como UTC
+    if created_at.tzinfo is None:
+        return created_at.replace(tzinfo=timezone.utc).isoformat()
+
+    return created_at.isoformat()
 
 def format_history(history):
     # Formata os dados do banco para JSON
@@ -30,7 +38,7 @@ def format_history(history):
                 "purchase_value": float(item["purchase_value"]),
                 "discount_percentage": float(item["discount_percentage"]),
                 "cashback": float(item["cashback"]),
-                "created_at": item["created_at"].strftime("%Y-%m-%d %H:%M:%S"),
+                "created_at": format_created_at(item["created_at"])
             }
         )
 
