@@ -1,3 +1,4 @@
+/* Base geral */
 * {
     box-sizing: border-box;
 }
@@ -9,6 +10,7 @@ body {
     color: #102a3a;
 }
 
+/* Layout principal */
 .container {
     width: 90%;
     max-width: 920px;
@@ -24,6 +26,7 @@ body {
     box-shadow: 0 12px 30px rgba(10, 38, 55, 0.08);
 }
 
+/* Títulos e textos */
 h1,
 h2 {
     margin-top: 0;
@@ -45,6 +48,7 @@ h2 {
     line-height: 1.5;
 }
 
+/* Formulário */
 form {
     display: flex;
     flex-direction: column;
@@ -78,8 +82,9 @@ select:focus {
     box-shadow: 0 0 0 3px rgba(50, 214, 160, 0.18);
 }
 
+/* Botões */
 button {
-    margin-top: 12px;
+    margin-top: 0;
     padding: 13px 22px;
     border: none;
     border-radius: 5px;
@@ -97,6 +102,42 @@ button:hover {
     transform: translateY(-1px);
 }
 
+.button-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.button-group button {
+    flex: 1;
+}
+
+.clear-button {
+    background-color: #e8f3f5;
+    color: #12384d;
+    border: 1px solid #bfd5df;
+    box-shadow: none;
+}
+
+.clear-button:hover {
+    background-color: #d9ebef;
+}
+
+.delete-button {
+    margin-top: 12px;
+    padding: 8px 14px;
+    width: auto;
+    background-color: #d94343;
+    color: #ffffff;
+    font-size: 14px;
+    border-radius: 6px;
+}
+
+.delete-button:hover {
+    background-color: #c73535;
+}
+
+/* Resultado do cálculo */
 .result {
     margin-top: 20px;
     padding: 16px;
@@ -110,6 +151,7 @@ button:hover {
     display: none;
 }
 
+/* Histórico */
 .history-list {
     display: flex;
     flex-direction: column;
@@ -132,19 +174,25 @@ button:hover {
     color: #07324a;
 }
 
-.delete-button {
-    margin-top: 12px;
-    padding: 8px 14px;
-    width: auto;
-    background-color: #d94343;
-    color: #ffffff;
+/* Validação visual */
+.field-error {
+    display: none;
+    color: #c73535;
     font-size: 14px;
-    border-radius: 6px;
+    margin-top: -6px;
 }
 
-.delete-button:hover {
-    background-color: #c73535;
+.input-error {
+    border-color: #d94343 !important;
+    background-color: #fff5f5 !important;
 }
+
+.input-error:focus {
+    border-color: #d94343 !important;
+    box-shadow: 0 0 0 3px rgba(217, 67, 67, 0.18) !important;
+}
+
+/* Responsividade */
 @media (max-width: 600px) {
     .container {
         width: 94%;
@@ -163,25 +211,8 @@ button:hover {
     h2 {
         font-size: 22px;
     }
-}
 
-.button-group {
-    display: flex;
-    gap: 12px;
-    margin-top: 12px;
-}
-
-.button-group button {
-    flex: 1;
-}
-
-.clear-button {
-    background-color: #e8f3f5;
-    color: #12384d;
-    border: 1px solid #bfd5df;
-    box-shadow: none;
-}
-
-.clear-button:hover {
-    background-color: #d9ebef;
+    .button-group {
+        flex-direction: column;
+    }
 }

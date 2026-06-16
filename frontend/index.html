@@ -27,8 +27,8 @@
                 <input type="text" id="purchaseValue" placeholder="Ex: R$ 600,00" inputmode="decimal" required>
 
                 <label for="discountPercentage">Desconto (%)</label>
-                <input type="number" id="discountPercentage" placeholder="Ex: 20" min="0" max="100" step="0.01"
-                    value="0">
+                <input type="number" id="discountPercentage" placeholder="Ex: 20" step="0.01" value="0">
+                <small id="discountError" class="field-error"></small>
 
                 <div class="button-group">
                     <button type="submit">Calcular cashback</button>

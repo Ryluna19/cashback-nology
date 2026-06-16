@@ -4,13 +4,18 @@ const form = document.getElementById("cashbackForm");
 const result = document.getElementById("result");
 const historyList = document.getElementById("historyList");
 const clearFormButton = document.getElementById("clearFormButton");
+const discountInput = document.getElementById("discountPercentage");
+const discountError = document.getElementById("discountError");
 
+// Formata valores para moeda brasileira
 function formatCurrency(value) {
     return value.toLocaleString("pt-BR", {
         style: "currency",
         currency: "BRL"
     });
 }
+
+// Converte texto em moeda para número
 function parseCurrency(value) {
     const cleanValue = value
         .replace("R$", "")
@@ -21,6 +26,7 @@ function parseCurrency(value) {
     return Number(cleanValue);
 }
 
+// Formata o valor da compra ao sair do campo
 function formatPurchaseInput() {
     const purchaseInput = document.getElementById("purchaseValue");
     const value = parseCurrency(purchaseInput.value);
@@ -32,6 +38,7 @@ function formatPurchaseInput() {
     purchaseInput.value = formatCurrency(value);
 }
 
+// Limpa os campos do formulário
 function clearForm() {
     document.getElementById("customerType").value = "normal";
     document.getElementById("purchaseValue").value = "";
@@ -39,7 +46,11 @@ function clearForm() {
 
     result.classList.add("hidden");
     result.innerHTML = "";
+
+    clearDiscountError();
 }
+
+// Formata a data para o padrão brasileiro
 function formatDate(dateValue) {
     const date = new Date(dateValue);
 
@@ -51,6 +62,8 @@ function formatDate(dateValue) {
         minute: "2-digit"
     });
 }
+
+// Formata o tipo de cliente para exibição
 function formatCustomerType(customerType) {
     if (customerType === "vip") {
         return "VIP";
@@ -59,8 +72,47 @@ function formatCustomerType(customerType) {
     return "Normal";
 }
 
+// Exibe erro visual no campo de desconto
+function showDiscountError(message) {
+    discountInput.classList.add("input-error");
+    discountError.style.display = "block";
+    discountError.textContent = message;
+}
+
+// Remove erro visual do campo de desconto
+function clearDiscountError() {
+    discountInput.classList.remove("input-error");
+    discountError.style.display = "none";
+    discountError.textContent = "";
+}
+
+// Valida se o desconto está entre 0 e 100
+function validateDiscount() {
+    const discountValue = Number(discountInput.value);
+
+    if (discountInput.value === "") {
+        showDiscountError("Informe um desconto entre 0 e 100.");
+        return false;
+    }
+
+    if (Number.isNaN(discountValue) || discountValue < 0 || discountValue > 100) {
+        showDiscountError("Use um número válido de 0 a 100.");
+        return false;
+    }
+
+    clearDiscountError();
+    return true;
+}
+
+// Envia os dados para a API e calcula o cashback
 async function calculateCashback(event) {
     event.preventDefault();
+
+    const isDiscountValid = validateDiscount();
+
+    if (!isDiscountValid) {
+        return;
+    }
 
     const customerType = document.getElementById("customerType").value;
     const purchaseValue = parseCurrency(
@@ -96,6 +148,7 @@ async function calculateCashback(event) {
     loadHistory();
 }
 
+// Carrega o histórico do IP atual
 async function loadHistory() {
     const response = await fetch(`${API_URL}/history`);
     const data = await response.json();
@@ -121,12 +174,13 @@ async function loadHistory() {
             <button class="delete-button" onclick="deleteHistoryItem(${item.id})">
                 Deletar
             </button>
-          `;
+        `;
 
         historyList.appendChild(historyItem);
     });
 }
 
+// Deleta um item específico do histórico
 async function deleteHistoryItem(id) {
     const confirmDelete = confirm("Deseja deletar este registro do histórico?");
 
@@ -148,9 +202,13 @@ async function deleteHistoryItem(id) {
     loadHistory();
 }
 
+// Eventos do formulário
 document
     .getElementById("purchaseValue")
     .addEventListener("blur", formatPurchaseInput);
+
+discountInput.addEventListener("blur", validateDiscount);
+discountInput.addEventListener("input", validateDiscount);
 
 clearFormButton.addEventListener("click", clearForm);
 
