@@ -5,33 +5,44 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background-color: #121212;
-    color: #ffffff;
+    background: linear-gradient(135deg, #dfeaf0 0%, #cfdde5 100%);
+    color: #102a3a;
 }
 
 .container {
     width: 90%;
-    max-width: 900px;
+    max-width: 920px;
     margin: 40px auto;
 }
 
 .card {
-    background-color: #1e1e1e;
-    border: 1px solid #333333;
-    border-radius: 12px;
-    padding: 24px;
+    background-color: #ffffff;
+    border: 1px solid #d8e6ee;
+    border-radius: 16px;
+    padding: 28px;
     margin-bottom: 24px;
+    box-shadow: 0 12px 30px rgba(10, 38, 55, 0.08);
 }
 
 h1,
 h2 {
     margin-top: 0;
-    color: #ff7a00;
+    color: #07324a;
+}
+
+h1 {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+h2 {
+    font-size: 24px;
 }
 
 .subtitle {
-    color: #cccccc;
+    color: #486474;
     margin-bottom: 24px;
+    line-height: 1.5;
 }
 
 form {
@@ -42,40 +53,57 @@ form {
 
 label {
     font-weight: bold;
+    color: #12384d;
 }
 
 input,
 select {
-    padding: 12px;
-    border: 1px solid #444444;
-    border-radius: 8px;
-    background-color: #2a2a2a;
-    color: #ffffff;
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #bfd5df;
+    border-radius: 10px;
+    background-color: #f8fbfd;
+    color: #102a3a;
     font-size: 16px;
+}
+
+input::placeholder {
+    color: #8ba3af;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #32d6a0;
+    box-shadow: 0 0 0 3px rgba(50, 214, 160, 0.18);
 }
 
 button {
     margin-top: 12px;
-    padding: 12px;
+    padding: 13px 22px;
     border: none;
-    border-radius: 8px;
-    background-color: #ff7a00;
-    color: #121212;
-    font-size: 16px;
-    font-weight: bold;
+    border-radius: 5px;
+    background-color: #55bfc2;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
     cursor: pointer;
+    transition: 0.2s ease;
+    box-shadow: 0 4px 10px rgba(85, 191, 194, 0.25);
 }
 
 button:hover {
-    background-color: #ff922b;
+    background-color: #48aeb1;
+    transform: translateY(-1px);
 }
 
 .result {
     margin-top: 20px;
     padding: 16px;
-    border-radius: 8px;
-    background-color: #263524;
-    border: 1px solid #3f7d38;
+    border-radius: 10px;
+    background-color: #e9fbf5;
+    border: 1px solid #32d6a0;
+    color: #0b4a38;
 }
 
 .hidden {
@@ -85,39 +113,75 @@ button:hover {
 .history-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
 }
 
 .history-item {
-    padding: 16px;
-    border-radius: 8px;
-    background-color: #2a2a2a;
-    border: 1px solid #3a3a3a;
+    padding: 18px;
+    border-radius: 12px;
+    background-color: #f8fbfd;
+    border: 1px solid #d8e6ee;
 }
 
 .history-item p {
-    margin: 6px 0;
+    margin: 7px 0;
+    color: #18394a;
 }
 
+.history-item strong {
+    color: #07324a;
+}
+
+.delete-button {
+    margin-top: 12px;
+    padding: 8px 14px;
+    width: auto;
+    background-color: #d94343;
+    color: #ffffff;
+    font-size: 14px;
+    border-radius: 6px;
+}
+
+.delete-button:hover {
+    background-color: #c73535;
+}
 @media (max-width: 600px) {
     .container {
+        width: 94%;
         margin: 20px auto;
     }
 
     .card {
-        padding: 18px;
+        padding: 20px;
+        border-radius: 14px;
+    }
+
+    h1 {
+        font-size: 26px;
+    }
+
+    h2 {
+        font-size: 22px;
     }
 }
 
-.delete-button {
-    margin-top: 10px;
-    padding: 8px 12px;
-    width: auto;
-    background-color: #b83232;
-    color: #ffffff;
-    font-size: 14px;
+.button-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
 }
 
-.delete-button:hover {
-    background-color: #d64545;
+.button-group button {
+    flex: 1;
+}
+
+.clear-button {
+    background-color: #e8f3f5;
+    color: #12384d;
+    border: 1px solid #bfd5df;
+    box-shadow: none;
+}
+
+.clear-button:hover {
+    background-color: #d9ebef;
 }

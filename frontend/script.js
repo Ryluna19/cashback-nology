@@ -3,12 +3,42 @@ const API_URL = "https://cashback-nology-532z.onrender.com";
 const form = document.getElementById("cashbackForm");
 const result = document.getElementById("result");
 const historyList = document.getElementById("historyList");
+const clearFormButton = document.getElementById("clearFormButton");
 
 function formatCurrency(value) {
     return value.toLocaleString("pt-BR", {
         style: "currency",
         currency: "BRL"
     });
+}
+function parseCurrency(value) {
+    const cleanValue = value
+        .replace("R$", "")
+        .replace(/\./g, "")
+        .replace(",", ".")
+        .trim();
+
+    return Number(cleanValue);
+}
+
+function formatPurchaseInput() {
+    const purchaseInput = document.getElementById("purchaseValue");
+    const value = parseCurrency(purchaseInput.value);
+
+    if (!value || value <= 0) {
+        return;
+    }
+
+    purchaseInput.value = formatCurrency(value);
+}
+
+function clearForm() {
+    document.getElementById("customerType").value = "normal";
+    document.getElementById("purchaseValue").value = "";
+    document.getElementById("discountPercentage").value = 0;
+
+    result.classList.add("hidden");
+    result.innerHTML = "";
 }
 function formatDate(dateValue) {
     const date = new Date(dateValue);
@@ -33,7 +63,9 @@ async function calculateCashback(event) {
     event.preventDefault();
 
     const customerType = document.getElementById("customerType").value;
-    const purchaseValue = document.getElementById("purchaseValue").value;
+    const purchaseValue = parseCurrency(
+        document.getElementById("purchaseValue").value
+    );
     const discountPercentage = document.getElementById("discountPercentage").value;
 
     const response = await fetch(`${API_URL}/calculate`, {
@@ -115,6 +147,12 @@ async function deleteHistoryItem(id) {
 
     loadHistory();
 }
+
+document
+    .getElementById("purchaseValue")
+    .addEventListener("blur", formatPurchaseInput);
+
+clearFormButton.addEventListener("click", clearForm);
 
 form.addEventListener("submit", calculateCashback);
 
