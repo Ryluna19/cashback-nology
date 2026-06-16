@@ -268,21 +268,29 @@ CREATE TABLE IF NOT EXISTS tbl_cashback_queries (
 );
 ```
 
+## Links do projeto
+
+* App publicado: https://cashback-nology.netlify.app/
+* API publicada: https://cashback-nology-532z.onrender.com
+
 ## Deploy
 
-A proposta de deploy do projeto é:
+O projeto foi publicado utilizando serviços gratuitos:
 
-* Frontend estático hospedado no GitHub Pages
+* Frontend estático hospedado no Netlify
 * Backend Flask hospedado no Render
 * Banco PostgreSQL hospedado no Neon
 
-Para produção, o frontend deve apontar para a URL pública da API hospedada no Render.
+O frontend consome a API publicada no Render, e a API registra as consultas no banco PostgreSQL hospedado no Neon.
 
-No arquivo `frontend/script.js`, a variável abaixo deve ser atualizada após o deploy do backend:
+Observação: por utilizar planos gratuitos, o backend no Render e o banco no Neon podem ficar inativos após um período sem uso. Caso isso aconteça, o primeiro acesso pode demorar alguns segundos enquanto os serviços são reativados automaticamente.
+
+Para produção, a variável `API_URL` no arquivo `frontend/script.js` aponta para a API publicada no Render:
 
 ```javascript
-const API_URL = "URL_DA_API_NO_RENDER";
+const API_URL = "https://cashback-nology-532z.onrender.com";
 ```
+
 
 ## Observações
 
