@@ -1,3 +1,7 @@
+## Links do projeto
+
+* App publicado: https://cashback-nology.netlify.app/
+* API publicada: https://cashback-nology-532z.onrender.com
 # Calculadora de Cashback - Desafio Nology
 
 Projeto desenvolvido para o desafio de Estagiário de Dev da Nology.
