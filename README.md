@@ -1,12 +1,14 @@
-## Links do projeto
 
-* App publicado: https://cashback-nology.netlify.app/
-* API publicada: https://cashback-nology-532z.onrender.com
 # Calculadora de Cashback - Desafio Nology
 
 Projeto desenvolvido para o desafio de Estagiário de Dev da Nology.
 
 A aplicação calcula o cashback de uma compra com base nas regras de negócio informadas no desafio. O usuário pode informar o tipo de cliente, o valor da compra e o percentual de desconto. Cada consulta realizada é salva em banco de dados e exibida no histórico apenas para o IP que realizou a consulta.
+
+## Links do projeto
+
+* App publicado: https://cashback-nology.netlify.app/
+* API publicada: https://cashback-nology-532z.onrender.com
 
 ## Tecnologias utilizadas
 
@@ -19,17 +21,18 @@ A aplicação calcula o cashback de uma compra com base nas regras de negócio i
 * JavaScript
 * GitHub
 * Render
-* GitHub Pages
+* Netlify
 
 ## Regras de negócio
 
 O cálculo do cashback segue as seguintes regras:
 
-* O cashback é calculado sobre o valor final da compra, após descontos.
-* O cashback base é de 5%.
-* Compras acima de R$ 500,00 recebem cashback em dobro.
-* Clientes VIP recebem 10% de bônus sobre o cashback calculado.
-* O bônus VIP é aplicado após o cálculo do cashback base e da promoção.
+* O cashback é calculado sobre o valor final da compra, após a aplicação de descontos.
+* O cashback base corresponde a 5% do valor final da compra.
+* Clientes VIP recebem um bônus adicional de 10% sobre o cashback base.
+* Compras com valor final acima de R$ 500,00 recebem cashback em dobro.
+* O cálculo segue a ordem: primeiro é calculado o valor final da compra, depois o cashback base, em seguida o bônus VIP, quando aplicável, e por fim a promoção de cashback em dobro.
+
 
 ## Exemplo de cálculo
 
@@ -65,8 +68,8 @@ cashback-nology/
 │   ├── requirements.txt
 │   ├── test_cashback.py
 │   ├── test_database.py
-│   ├── .env.example
-│   └── .env
+│   └── .env.example
+│   
 │
 ├── frontend/
 │   ├── index.html
@@ -89,7 +92,7 @@ cashback-nology/
 ### 1. Clonar o repositório
 
 ```bash
-git clone link-do-repositorio
+git clone https://github.com/Ryluna19/cashback-nology.git
 cd cashback-nology
 ```
 
@@ -272,11 +275,6 @@ CREATE TABLE IF NOT EXISTS tbl_cashback_queries (
 );
 ```
 
-## Links do projeto
-
-* App publicado: https://cashback-nology.netlify.app/
-* API publicada: https://cashback-nology-532z.onrender.com
-
 ## Deploy
 
 O projeto foi publicado utilizando serviços gratuitos:
@@ -298,7 +296,7 @@ const API_URL = "https://cashback-nology-532z.onrender.com";
 
 ## Observações
 
-O projeto foi desenvolvido com foco em clareza, simplicidade e aderência às regras de negócio do desafio.
+O projeto foi desenvolvido com foco em clareza, simplicidade e aderência às regras de negócio apresentadas no desafio.
 
 As funções e variáveis foram mantidas em inglês por padrão de desenvolvimento, enquanto os comentários, mensagens para o usuário e documentação foram escritos em português, considerando o contexto da vaga e do avaliador.
 
