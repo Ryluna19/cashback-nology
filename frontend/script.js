@@ -6,6 +6,7 @@ const historyList = document.getElementById("historyList");
 const clearFormButton = document.getElementById("clearFormButton");
 const discountInput = document.getElementById("discountPercentage");
 const discountError = document.getElementById("discountError");
+const submitButton = form.querySelector("button[type='submit']");
 
 // Formata valores para moeda brasileira
 function formatCurrency(value) {
@@ -114,70 +115,98 @@ async function calculateCashback(event) {
         return;
     }
 
-    const customerType = document.getElementById("customerType").value;
-    const purchaseValue = parseCurrency(
-        document.getElementById("purchaseValue").value
-    );
-    const discountPercentage = document.getElementById("discountPercentage").value;
-
-    const response = await fetch(`${API_URL}/calculate`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            customer_type: customerType,
-            purchase_value: Number(purchaseValue),
-            discount_percentage: Number(discountPercentage)
-        })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-        result.classList.remove("hidden");
-        result.innerHTML = `<strong>Erro:</strong> ${data.error}`;
-        return;
-    }
+    submitButton.textContent = "Calculando...";
+    submitButton.disabled = true;
 
     result.classList.remove("hidden");
-    result.innerHTML = `
-        <strong>Cashback calculado:</strong> ${formatCurrency(data.cashback)}
-    `;
+    result.innerHTML = "<strong>Aguarde:</strong> Calculando cashback...";
 
-    loadHistory();
+    try {
+        const customerType = document.getElementById("customerType").value;
+        const purchaseValue = parseCurrency(
+            document.getElementById("purchaseValue").value
+        );
+        const discountPercentage = document.getElementById("discountPercentage").value;
+
+        const response = await fetch(`${API_URL}/calculate`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                customer_type: customerType,
+                purchase_value: Number(purchaseValue),
+                discount_percentage: Number(discountPercentage)
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            result.innerHTML = `<strong>Erro:</strong> ${data.error}`;
+            return;
+        }
+
+        result.innerHTML = `
+            <strong>Cashback calculado:</strong> ${formatCurrency(data.cashback)}
+        `;
+
+        await loadHistory();
+    } catch (error) {
+        result.classList.remove("hidden");
+        result.innerHTML = `
+            <strong>Erro:</strong> Não foi possível conectar à API. 
+            Aguarde alguns segundos e tente novamente.
+        `;
+    } finally {
+        submitButton.textContent = "Calcular cashback";
+        submitButton.disabled = false;
+    }
 }
 
 // Carrega o histórico do IP atual
 async function loadHistory() {
-    const response = await fetch(`${API_URL}/history`);
-    const data = await response.json();
+    historyList.innerHTML = "<p>Carregando histórico...</p>";
 
-    historyList.innerHTML = "";
+    try {
+        const response = await fetch(`${API_URL}/history`);
+        const data = await response.json();
 
-    if (data.history.length === 0) {
-        historyList.innerHTML = "<p>Nenhuma consulta encontrada.</p>";
-        return;
-    }
+        if (!response.ok) {
+            historyList.innerHTML = "<p>Não foi possível carregar o histórico.</p>";
+            return;
+        }
 
-    data.history.forEach((item) => {
-        const historyItem = document.createElement("div");
-        historyItem.classList.add("history-item");
+        historyList.innerHTML = "";
 
-        historyItem.innerHTML = `
-            <p><strong>Cliente:</strong> ${formatCustomerType(item.customer_type)}</p>
-            <p><strong>Valor da compra:</strong> ${formatCurrency(item.purchase_value)}</p>
-            <p><strong>Desconto:</strong> ${item.discount_percentage}%</p>
-            <p><strong>Cashback:</strong> ${formatCurrency(item.cashback)}</p>
-            <p><strong>Data:</strong> ${formatDate(item.created_at)}</p>
+        if (data.history.length === 0) {
+            historyList.innerHTML = "<p>Nenhuma consulta encontrada.</p>";
+            return;
+        }
 
-            <button class="delete-button" onclick="deleteHistoryItem(${item.id})">
-                Deletar
-            </button>
+        data.history.forEach((item) => {
+            const historyItem = document.createElement("div");
+            historyItem.classList.add("history-item");
+
+            historyItem.innerHTML = `
+                <p><strong>Cliente:</strong> ${formatCustomerType(item.customer_type)}</p>
+                <p><strong>Valor da compra:</strong> ${formatCurrency(item.purchase_value)}</p>
+                <p><strong>Desconto:</strong> ${item.discount_percentage}%</p>
+                <p><strong>Cashback:</strong> ${formatCurrency(item.cashback)}</p>
+                <p><strong>Data:</strong> ${formatDate(item.created_at)}</p>
+
+                <button class="delete-button" onclick="deleteHistoryItem(${item.id})">
+                    Deletar
+                </button>
+            `;
+
+            historyList.appendChild(historyItem);
+        });
+    } catch (error) {
+        historyList.innerHTML = `
+            <p>Não foi possível conectar à API para carregar o histórico.</p>
         `;
-
-        historyList.appendChild(historyItem);
-    });
+    }
 }
 
 // Deleta um item específico do histórico

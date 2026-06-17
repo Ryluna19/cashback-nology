@@ -137,6 +137,12 @@ button:hover {
     background-color: #c73535;
 }
 
+button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
 /* Resultado do cálculo */
 .result {
     margin-top: 20px;
