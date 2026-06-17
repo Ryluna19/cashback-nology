@@ -67,7 +67,6 @@ cashback-nology/
 │   ├── database.py
 │   ├── requirements.txt
 │   ├── test_cashback.py
-│   ├── test_database.py
 │   └── .env.example
 │   
 │
